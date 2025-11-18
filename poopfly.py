@@ -1,7 +1,9 @@
 from random import randint
 import time
+import skatter
+from skatter import k1, k2, k3, k4
 
-fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund']
+fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew']
 enamn = ['den fördärvade', 'Bajs', 'McMillen', 'Döden', 'O´ Moriah', 'Kall']
 
 class karaktar:
@@ -14,10 +16,20 @@ class karaktar:
 
 tempkp = randint(1, 5)
 tempsty = randint(5, 15)//tempkp
-sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]} {enamn[randint(0, len(enamn)-1)]}", tempkp, tempsty, 0, 1)
+evigsakkvalitet = randint(1, 100)
+if evigsakkvalitet >= 95:
+    evigsakkvalitet = k4
+elif evigsakkvalitet >= 80:
+    evigsakkvalitet = k3
+elif evigsakkvalitet > 60:
+    evigsakkvalitet = k2
+else:
+    evigsakkvalitet = k1
+sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]} {enamn[randint(0, len(enamn)-1)]}", tempkp, tempsty, 0, evigsakkvalitet[randint(0, len(evigsakkvalitet) - 1)])
 print(sp1.namn)
-print(sp1.kp)
-print(sp1.sty)
+print('KP:', sp1.kp)
+print('STY', sp1.sty)
+print(f'Startföremål: {sp1.inventarie.namn} | Kvalitet: {sp1.inventarie.kvalitet}\n{sp1.inventarie.beskrivning}')
 
 if sp1.namn[-1] == 's': # Kollar om spelarens namn slutar på s, och följer gramatikregler för plural
     plural = ""
