@@ -4,7 +4,7 @@ from skatter import skatt
 from skatter import k1, k2, k3, k4
 from ormbarst_name_gen import von_ormbarst_namn
 
-fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon']
+fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'Filip']
 enamn = ['den fördärvade', 'Bajs', 'McMillen', 'Döden', 'O´ Moriah', 'Kall', 'Von Ormbarst']
 
 class karaktar:
@@ -24,7 +24,7 @@ class karaktar:
 
 sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]} {enamn[randint(0, len(enamn)-1)]}", karaktar.bas_kp, karaktar.bas_sty, karaktar.bas_niva, [])#Skapar rollpersonen
 if sp1.namn[0] == 'g':
-
+    sp1.namn = von_ormbarst_namn()
 
 evigsakkvalitet = randint(1, 100) #Bestämmer startföremålets (evighetsföremålet) kvalitet
 if evigsakkvalitet >= 95:
@@ -69,10 +69,10 @@ while True:
                 -> ''').upper()
     if val == 'R':
         for i in range(len(sp1.inventarie)):
-            print(f'{i+1}. {sp1.inventarie[i - 1].namn} | Kvalitet: {sp1.inventarie[i - 1].kvalitet}\n  {sp1.inventarie[i - 1].beskrivning}\n   KP mod: {sp1.inventarie[i - 1].kpmod} | STY mod: {sp1.inventarie[i -1].stymod} | Nivå mod: {sp1.inventarie[i - 1].nivamod}')
+            print(f'{i+1}. {sp1.inventarie[i - 1].namn} | Kvalitet: {sp1.inventarie[i - 1].kvalitet}\n  {sp1.inventarie[i - 1].beskrivning}\n   KP mod: {sp1.inventarie[i - 1].kpmod} | STY mod: {sp1.inventarie[i -1].stymod} | Nivå mod: {sp1.inventarie[i - 1].nivamod}\n')
     elif val == 'D':
         print('D')
     elif val == 'F':
-        print(f'{sp1.namn + plural} färdigheter:\n|Nivå: {sp1.niva} | KP: {sp1.kp} | STY: {sp1.sty}|')
+        print(f'{sp1.namn + plural} färdigheter:\n  Nivå: {sp1.niva} | KP: {sp1.kp} | STY: {sp1.sty}')
     else:
         continue
