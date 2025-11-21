@@ -4,8 +4,8 @@ from skatter import skatt
 from skatter import k1, k2, k3, k4
 from ormbarst_name_gen import von_ormbarst_namn
 
-fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', '', 'Filip']
-enamn = [', den fördärvade', 'Bajs', 'McMillen', 'Döden', 'O´ Moriah', 'Kall', 'Von Ormbarst', ', den trosfanatiska', ', den skurna', ', den oförfärad', ', den oupplysta', ', den enigmatiska', ', den godtyckliga']
+fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'Filip']
+enamn = [', den fördärvade', ' Bajs', ' McMillen', ' Döden', ' O´ Moriah', ' Kall', ' Von Ormbarst', ', den trosfanatiska', ', den skurna', ', den oförfärad', ', den oupplysta', ', den enigmatiska', ', den godtyckliga']
 
 class karaktar:
     bas_kp = randint(1, 5)
@@ -22,8 +22,8 @@ class karaktar:
         karaktar.niva = niva
         karaktar.inventarie = inventarie
 
-sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]} {enamn[randint(0, len(enamn)-1)]}", karaktar.bas_kp, karaktar.bas_sty, karaktar.bas_niva, [])#Skapar rollpersonen
-if sp1.namn[0] == '':
+sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1)]}", karaktar.bas_kp, karaktar.bas_sty, karaktar.bas_niva, [])#Skapar rollpersonen
+if sp1.namn[0] == 'g':
     sp1.namn = von_ormbarst_namn()
 
 evigsakkvalitet = randint(1, 100) #Bestämmer startföremålets (evighetsföremålet) kvalitet
