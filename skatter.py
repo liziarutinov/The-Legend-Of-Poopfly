@@ -9,6 +9,13 @@ class skatt:
         skatt.nivamod = nivamod
         skatt.beskrivning = beskrivning
 
+def print_skatt(sak):
+    mod = 'mod'
+    if sak.mod_ar_mult == True:
+        mod = 'mult'
+    output = f' {sak.namn} | Kvalitet: {sak.kvalitet}\n  {sak.beskrivning}\n   KP {mod}: {sak.kpmod} | STY {mod}: {sak.stymod} | Nivå mod {sak.nivamod}'
+    return(output)
+
 # skatt('NAMN', kp modifier, sty modifier, niva modifier, '"Beskrivning"')
 #Kvalitet 1 föremål
 k1 = [
@@ -24,7 +31,7 @@ k2 = [
 skatt('Raket i en burk', -1, 2, 0, '"Jag förstår inte riktigt hur man fick in den..."'),
 skatt('Pandoras ask', randint(-2, 4), randint(-5, 5), randint(0, 1), '"Slumpmässig egenskapsförändring"')
 ]
-for i in k2:
+for i in k2: 
     i.kvalitet = 2 #Ger alla items i listan k2 kvalitetvärde 2
 
 #Kvalitet 3 föremål
