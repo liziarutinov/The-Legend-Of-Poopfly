@@ -42,8 +42,8 @@ class karaktar:
         if self.bas_kp + self.kpmod * kpmult < 1:
                 self.kp = 1
         else:
-            self.kp = self.bas_kp + self.kpmod * kpmult + self.niva
-        self.sty = self.bas_sty + self.stymod * stymult + self.niva
+            self.kp = self.bas_kp + self.kpmod * kpmult + (self.niva * 2)
+        self.sty = self.bas_sty + self.stymod * stymult + (self.niva * 2)
         if self.niva >= 10:
             if self.kp -self.skada < 1:
                 quit('Du vann och dog samtidigt... galet...')
@@ -51,21 +51,25 @@ class karaktar:
         elif self.kp - self.skada < 1:
             quit('Förlust: Du har tagit mer träffar än du har KP!')
 
-def tilvinna_skatt(self, skatt):
+def avskaffa_skatt(self):
     output = ''
-    self.inventarie.append(skatt)
-    if len(self.inventarie) > 5:
-        for i in range(0, len(self.inventarie)):
-            output += f'{i + 1}. {print_skatt(self.inventarie[i])}\n\n'
-        print(output)
-        while True:
-            val = input(f'Vilken skatt i din ryggsäck vill du byta ut??->')
-            if int(val) in range(1, len(self.inventarie) + 1):
-                val = input(f'Är du säker på att du vill byta ut {self.inventarie[int(val) - 1].namn}? J/N')
-                if val == 'J':
-                    self.inventarie.pop(int(val) - 1)
+    for i in range(0, len(self.inventarie)):
+        output += f'{i + 1}. {print_skatt(self.inventarie[i])}\n\n'
+    print(output)
+    while True:
+        val = input(f'Vilken skatt i din ryggsäck vill du byta ut??->')
+        if int(val) in range(1, len(self.inventarie) + 1):
+            if input(f'Är du säker på att du vill byta ut {self.inventarie[int(val) - 1].namn}? J/N ->').upper() == 'J':
+                self.inventarie.pop(int(val) - 1)
+                return()
             else:
                 print('Skriv siffran som representerar föremålet du vill byta ut (1, 2, 3, 4, 5, 6)')
+
+def tilvinna_skatt(self, skatt):
+    self.inventarie.append(skatt)
+    if len(self.inventarie) > 5:
+        avskaffa_skatt(self)
+
 
 
 
@@ -73,7 +77,7 @@ sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1
 if sp1.namn[0] == 'g':
     sp1.namn = von_ormbarst_namn()
 
-foremal_kvalitet = randint(1, 100) #Bestämmer startföremålets (evighetsföremålet) kvalitet
+foremal_kvalitet = randint(1, 100) #Bestämmer föremåls kvalitet
 if foremal_kvalitet >= 96:
     foremal_kvalitet = k4
 elif foremal_kvalitet >= 81:
@@ -88,6 +92,7 @@ print(sp1.namn)
 print('KP:', sp1.kp)
 print('STY', sp1.sty)
 print(f'Startföremål: {sp1.inventarie[0].namn} | Kvalitet: {sp1.inventarie[0].kvalitet}\n{sp1.inventarie[0].beskrivning}')
+
 if sp1.namn[-1] == 's': # Kollar om spelarens namn slutar på s, och följer gramatikregler för plural
     plural = ""
 else:
@@ -122,7 +127,7 @@ bossmonsteralternativ = [ # möjliga bossar
 attackbeskrivning = [f'slår {sp1.namn}', 'sparkar {sp1.namn}', 'klöser {sp1.namn} med tånaglarna', 'biter {sp1.namn}', 'slickar {sp1.namn}', 'sticker {sp1.namn} med sin {monster.vapen}', 'krossar {sp1.namn} med {monster.vapen}',]
 
 while True: #Hela spelloopen
-    rumstyp = ['monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'läkerum']
+    rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'läkerum']
     while len(rumstyp) > 3:
         rumstyp.pop(randint(0, len(rumstyp)-1))
     print(f"{sp1.namn} ser tre dörrar {rumstyp}.")
@@ -194,25 +199,42 @@ while True: #Hela spelloopen
         time.sleep(0.5)
 
         print(f"{sp1.namn} har {sp1.kp - sp1.skada} kp kvar.")
-        print(f"{sp1.namn} är nivå {sp1.niva + 1}.")
+        print(f"{sp1.namn} är nivå {sp1.niva}.")
     
     
     elif rumstyp[int(val)-1] == 'skattkammare': #SKATTKAMMARE
         foremal_kvalitet = randint(1, 100)
-        if foremal_kvalitet >= 96 and len(k4) > 0:
-            tillvunnet_foremal = k4[randint(0, len(k4) - 1)]
-            k4.remove(tillvunnet_foremal)
-        elif foremal_kvalitet >= 81 and len(k3) > 0:
-            tillvunnet_foremal = k3[randint(0, len(k3) - 1)]
-            k3.remove(tillvunnet_foremal)
-        elif foremal_kvalitet > 61 and len(k2) > 0:
-            tillvunnet_foremal = k2[randint(0, len(k2) - 1)]
-            k2.remove(tillvunnet_foremal)
-        elif len(k1) > 0:
-            tillvunnet_foremal = k1[randint(0, len(k1) - 1)]
-            k1.remove(tillvunnet_foremal)
-        else:
-            tillvunnet_foremal = skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."')
+        while True:
+            if foremal_kvalitet >= 96:
+                if len(k4) > 0:
+                    tillvunnet_foremal = k4[randint(0, len(k4) - 1)]
+                    k4.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 81
+                    continue
+            elif foremal_kvalitet >= 81:
+                if len(k3) > 0:
+                    tillvunnet_foremal = k3[randint(0, len(k3) - 1)]
+                    k3.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 61
+                    continue
+            elif foremal_kvalitet > 61:
+                if len(k2) > 0:
+                    tillvunnet_foremal = k2[randint(0, len(k2) - 1)]
+                    k2.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 1
+                    continue
+            elif len(k1) > 0:
+                tillvunnet_foremal = k1[randint(0, len(k1) - 1)]
+                k1.remove(tillvunnet_foremal)
+            else:
+                tillvunnet_foremal = skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."')
+            break
         mod = 'mod'
         if skatt.mod_ar_mult == True:
             mod = 'mult'
@@ -231,8 +253,22 @@ while True: #Hela spelloopen
 
     
     elif rumstyp[int(val)-1] == 'skatterum': #BETALA SKATT RUM
-        print('skatterum')
-    
+        print(f'{sp1.namn} kliver in i en mörk skattkammare')
+        time.sleep(0.5)
+        print(f'{sp1.namn} ser en dvärg i andra änden av rummet')
+        print('"gadd eller kladd"')
+        while True:
+            val = input('Vad vill du betala i skatt? 1 [S]katt eller 2 [K]P -> ').upper()
+            if val == 'S' or val == 'K':
+                break
+            else:
+                print('Du måste skriva S eller K')
+                continue 
+        if val == 'K':
+            sp1.skada += 2
+        elif val == 'S':
+            avskaffa_skatt(sp1)
+
     
     elif rumstyp[int(val)-1] == 'bossrum': #BOSS
         sp1.ge_stats()
@@ -268,8 +304,9 @@ while True: #Hela spelloopen
             slag = randint(1, sp1.sty)
             print(f'{sp1.namn} slår {fiende.monstertyp} och gör {slag} skada')
             fiende.kp -= slag
+            sp1.ge_stats()
 
-        print('du vann!')
+        print(f'{sp1.namn} besegrade {fiende.monstertyp}!')
     
     
     elif rumstyp[int(val)-1] == 'läkerum': #HELNING
