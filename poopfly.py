@@ -50,6 +50,9 @@ class karaktar:
             quit('Du vann spelet!!!!!!!!')
         elif self.kp - self.skada < 1:
             quit('Förlust: Du har tagit mer träffar än du har KP!')
+        
+        if skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"') in self.inventarie:
+            print('yes')
 
 def avskaffa_skatt(self):
     output = ''
@@ -77,7 +80,8 @@ sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1
 if sp1.namn[0] == 'g':
     sp1.namn = von_ormbarst_namn()
 
-foremal_kvalitet = randint(1, 100) #Bestämmer föremåls kvalitet
+sp1.inventarie += [skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"'), skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."')]
+foremal_kvalitet = randint(1, 100) #Bestämmer föremåls kvalitet för evighetsföremålet
 if foremal_kvalitet >= 96:
     foremal_kvalitet = k4
 elif foremal_kvalitet >= 81:
@@ -124,14 +128,15 @@ bossmonsteralternativ = [ # möjliga bossar
     monster('Den', 'den', 1, 1)
 ]
 
-attackbeskrivning = [f'slår {sp1.namn}', 'sparkar {sp1.namn}', 'klöser {sp1.namn} med tånaglarna', 'biter {sp1.namn}', 'slickar {sp1.namn}', 'sticker {sp1.namn} med sin {monster.vapen}', 'krossar {sp1.namn} med {monster.vapen}',]
+attackbeskrivning = [f'slår {sp1.namn}', f'sparkar {sp1.namn}', f'klöser {sp1.namn} med tånaglarna', f'biter {sp1.namn}', f'slickar {sp1.namn}', 'sticker {sp1.namn} med sin {monster.vapen}', 'krossar {sp1.namn} med {monster.vapen}',]
 
 while True: #Hela spelloopen
-    rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'läkerum']
+    sp1.ge_stats()
+    rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'bossrum', 'läkerum']
     while len(rumstyp) > 3:
         rumstyp.pop(randint(0, len(rumstyp)-1))
+        
     print(f"{sp1.namn} ser tre dörrar {rumstyp}.")
-    sp1.ge_stats()
 
     while True: #meny innan strid
         val = input('''Vad vill du göra?
@@ -174,13 +179,13 @@ while True: #Hela spelloopen
         while True:
                 val = input(f'''Vad vill du göra?
                                 Kolla [R]yggsäcken
-                                Slå mot [{fiende.monstertyp[0]}]{fiende.monstertyp[1:]}
+                                Slå mot [M]onstret {fiende.monstertyp}
                                 Kolla [F]ärdigheter 
                                 -> ''').upper()
                 if val == 'R':
                     for i in range(len(sp1.inventarie)):
                         print(f'{i+1}.{print_skatt(sp1.inventarie[i - 1])}')
-                elif val == fiende.monstertyp[0].upper():
+                elif val == 'M':
                     break
                 elif val == 'F':
                     print(f'{sp1.namn + plural} färdigheter:\n  Nivå: {sp1.niva} | KP: {sp1.kp} / {sp1.kp + sp1.skada} | STY: {sp1.sty}')
@@ -283,13 +288,13 @@ while True: #Hela spelloopen
             while True:
                 val = input(f'''Vad vill du göra?
                                 Kolla [R]yggsäcken
-                                Slå mot [{fiende.monstertyp[0]}]{fiende.monstertyp[1:]}
+                                Slå mot [B]ossen {fiende.monstertyp}
                                 Kolla [F]ärdigheter 
                                 -> ''').upper()
                 if val == 'R':
                     for i in range(len(sp1.inventarie)):
                         print(f'{i+1}.{print_skatt(sp1.inventarie[i - 1])}')
-                elif val == fiende.monstertyp[0].upper():
+                elif val == 'B':
                     break
                 elif val == 'F':
                     print(f'{sp1.namn + plural} färdigheter:\n  Nivå: {sp1.niva} | KP: {sp1.kp} / {sp1.kp + sp1.skada} | STY: {sp1.sty}')
@@ -307,8 +312,58 @@ while True: #Hela spelloopen
             sp1.ge_stats()
 
         print(f'{sp1.namn} besegrade {fiende.monstertyp}!')
+        foremal_kvalitet = randint(1,100)
+        while True:
+            if foremal_kvalitet >= 51:
+                if len(k4) > 0:
+                    tillvunnet_foremal = k4[randint(0, len(k4) - 1)]
+                    k4.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 1
+                    continue
+            elif foremal_kvalitet >= 1:
+                if len(k3) > 0:
+                    tillvunnet_foremal = k3[randint(0, len(k3) - 1)]
+                    k3.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 0
+                    continue
+            elif foremal_kvalitet > 0:
+                if len(k2) > 0:
+                    tillvunnet_foremal = k2[randint(0, len(k2) - 1)]
+                    k2.remove(tillvunnet_foremal)
+                    break
+                else:
+                    foremal_kvalitet = 0
+                    continue
+            elif len(k1) > 0:
+                tillvunnet_foremal = k1[randint(0, len(k1) - 1)]
+                k1.remove(tillvunnet_foremal)
+            else:
+                tillvunnet_foremal = skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."')
+            break
+        mod = 'mod'
+        if skatt.mod_ar_mult == True:
+            mod = 'mult'
+        print('I skattkammaren finns det:\n')
+        time.sleep(1)
+        print(f'  {print_skatt(tillvunnet_foremal)}')
+        while True:
+            val = input('\nVill du plocka upp den? J/N ->').upper()
+            if val == 'J':
+                tilvinna_skatt(sp1, tillvunnet_foremal)
+                break
+            elif val == 'N':
+                break
+            else:
+                print('Skriv in [J]a eller [N]ej')
+
     
     
     elif rumstyp[int(val)-1] == 'läkerum': #HELNING
         sp1.skada = sp1.skada - randint(1,3)
-        print('Du har nu helats!')
+        if sp1.skada <= 0:
+            sp1.skada = 0
+        print('Du är nu hel!')

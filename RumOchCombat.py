@@ -45,6 +45,22 @@ while True: #Hela spelloopen
     rumstyp = ['monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'Läkerum']
     while len(rumstyp) > 3:
         rumstyp.pop(randint(0, len(rumstyp)-1))
+    for rum in rumstyp:
+        if rum == 'monsterrum':
+            rumstyp.remove('monsterrum')
+            rumstyp.insert(0, 'en läskig dörr')
+        elif rum == 'skattkammare':
+            rumstyp.remove('skattkammare')
+            rumstyp.insert(0, 'en gyllene dörr')
+        elif rum == 'bossrum':
+            rumstyp.remove('bossrum')
+            rumstyp.insert(0, 'en ASSTOR DÖRR')
+        elif rum == 'läkerum':
+            rumstyp.remove('läkerum')
+            rumstyp.insert(0, 'en välkomnande vit dörr')
+        elif rum == 'skatterum':
+            rumstyp.remove('skatterum')
+            rumstyp.insert(0, 'en glittrande dörr')
     print(f"{sp1.namn} ser tre dörrar {rumstyp}.")
 
     while True: #meny innan strid
