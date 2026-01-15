@@ -5,12 +5,41 @@ from skatter import print_skatt
 from skatter import k1, k2, k3, k4
 from ormbarst_name_gen import von_ormbarst_namn
 
-fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'Filip', 'Holger']
-enamn = [', den fördärvade', ' Bajs', ' McMillen', ' Döden', ' O´ Moriah', ' Kall', ' Von Ormbarst', ', den trosfanatiska', ', den skurna', ', den oförfärad', ', den oupplysta', ', den enigmatiska', ', den godtyckliga']
+print('''
+                                _____ _
+                               |_   _| |__   ___
+                                 | | | '_ \ / _ |
+                                 | | | | | |  __/
+                                 |_| |_| |_|\___|
+             :::       :::::::::::::::::: ::::::::::::::    ::::::::::::
+            :+:       :+:      :+:    :+::+:       :+:+:   :+::+:    :+:
+           +:+       +:+      +:+       +:+       :+:+:+  +:++:+    +:+
+          +#+       +#++:++# :#:       +#++:++#  +#+ +:+ +#++#+    +:+
+         +#+       +#+      +#+   +#+#+#+       +#+  +#+#+#+#+    +#+
+        #+#       #+#      #+#    #+##+#       #+#   #+#+##+#    #+#
+       ############################ #############    #############
+                                          __
+                                    ___  / _|
+                                   / _ \| |_
+                                  | (_) |  _|
+                                   \___/|_|
+         :::::::::  ::::::::  :::::::: ::::::::: :::::::::::::    :::   :::
+        :+:    :+::+:    :+::+:    :+::+:    :+::+:       :+:    :+:   :+:
+       +:+    +:++:+    +:++:+    +:++:+    +:++:+       +:+     +:+ +:+
+      +#++:++#+ +#+    +:++#+    +:++#++:++#+ :#::+::#  +#+      +#++:
+     +#+       +#+    +#++#+    +#++#+       +#+       +#+       +#+
+    #+#       #+#    #+##+#    #+##+#       #+#       #+#       #+#
+   ###        ########  ######## ###       ###       #############
+''')
 
-class karaktar:
-    bas_kp = randint(5, 10)
-    bas_sty = randint(25, 50)//bas_kp
+input('Träd in i fängelshålan och ta med dig Poopfly:n på [RETUR] resan')
+
+fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'Filip', 'Holger'] 
+enamn = [', den fördärvade', ' Bajs', ' McMillen', ' Döden', 'Nilsson', 'Rosencrantz', ' O´ Moriah', ' Kall', ' Von Ormbarst', ', den trosfanatiska', ', den skurna', ', den oförfärad', ', den oupplysta', ', den enigmatiska', ', den godtyckliga']
+
+class karaktar: #Strukturen för spelarkaraktären
+    bas_kp = randint(5, 10) #Basvärde för karaktärens KP
+    bas_sty = randint(25, 50)//bas_kp #Basvärde för karaktärens STY, delat på bas_kp för att balansera
     bas_niva = 0
     kpmod = 0
     stymod = 0
@@ -29,7 +58,7 @@ class karaktar:
         self.nivamod = 0
         stymult = 1
         kpmult = 1
-        for i in range(len(self.inventarie)):
+        for i in range(len(self.inventarie)): #applicerar föremålens modifikationer på karaktären, förändringarna kommer från filen skatter.py
             if self.inventarie[i - 1].mod_ar_mult == True:
                 stymult += self.inventarie[i - 1].kpmod
                 kpmult += self.inventarie[i - 1].stymod
@@ -38,23 +67,34 @@ class karaktar:
                 self.stymod += self.inventarie[i -1].stymod
                 self.nivamod += self.inventarie[i - 1].nivamod
         
-        self.niva = self.bas_niva + self.nivamod
+        self.niva = self.bas_niva + self.nivamod #spelarens totala nivå
         if self.bas_kp + self.kpmod * kpmult < 1:
                 self.kp = 1
         else:
             self.kp = self.bas_kp + self.kpmod * kpmult + (self.niva * 2)
         self.sty = self.bas_sty + self.stymod * stymult + (self.niva * 2)
-        if self.niva >= 10:
+        if self.niva >= 10: #En check som kollar om spelaren vunnit eller förlorat varje gång det är möjligt.
             if self.kp -self.skada < 1:
                 quit('Du vann och dog samtidigt... galet...')
             quit('Du vann spelet!!!!!!!!')
         elif self.kp - self.skada < 1:
             quit('Förlust: Du har tagit mer träffar än du har KP!')
-        
-        if skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"') in self.inventarie:
-            print('yes')
+        synergi_array = [] #Används för att kolla synergieffekter mellan föremål i inventarien
+        for i in range(len(self.inventarie)): #SYNERGIER FUNKAR INTE ÄNNU
+            if self.inventarie[i].synergi_id != 0:
+                synergi_array.append(self.inventarie[i].synergi_id)
+        synergi_array.sort()
+        print(synergi_array)
+        for i in range(1, len(synergi_array) - 1):
+            if synergi_array[i] == synergi_array[i - 1]:
+                if synergi_array[i] == 1:
+                    self.inventarie.remove(skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."', 1))
+                    self.inventarie.remove(skatt('Spraydeoderant', 1, 0, 0, '"Teknikelevernas mardröm"', 1))
+                    self.inventarie.append(skatt('improviserad ELDKASTARE', -2, 5, 0, '"BOCKEN BRINNER!!!"', 0)) 
 
-def avskaffa_skatt(self):
+
+
+def avskaffa_skatt(self): #Funktion för att ta bort/byta ut ett föremål i spelarens inventarie
     output = ''
     for i in range(0, len(self.inventarie)):
         output += f'{i + 1}. {print_skatt(self.inventarie[i])}\n\n'
@@ -68,7 +108,7 @@ def avskaffa_skatt(self):
             else:
                 print('Skriv siffran som representerar föremålet du vill byta ut (1, 2, 3, 4, 5, 6)')
 
-def tilvinna_skatt(self, skatt):
+def tilvinna_skatt(self, skatt): #Funktion för att lägga till ett föremål i spelarens inventarie
     self.inventarie.append(skatt)
     if len(self.inventarie) > 5:
         avskaffa_skatt(self)
@@ -76,11 +116,11 @@ def tilvinna_skatt(self, skatt):
 
 
 
-sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1)]}", karaktar.bas_kp, karaktar.bas_sty, karaktar.bas_niva)#Skapar rollpersonen
+sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1)]}", karaktar.bas_kp, karaktar.bas_sty, karaktar.bas_niva)#Skapar rollpersonen utifrån klassen karaktar. Skapar namn från listorna fnamn och enamn.
 if sp1.namn[0] == 'g':
-    sp1.namn = von_ormbarst_namn()
+    sp1.namn = von_ormbarst_namn() #Speciell namn-generator för namn som börjar med g, för att få mer passande namn för Von Ormbarst
 
-sp1.inventarie += [skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"'), skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."')]
+sp1.inventarie += [skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"', 1), skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."', 1)]
 foremal_kvalitet = randint(1, 100) #Bestämmer föremåls kvalitet för evighetsföremålet
 if foremal_kvalitet >= 96:
     foremal_kvalitet = k4
@@ -101,6 +141,8 @@ if sp1.namn[-1] == 's': # Kollar om spelarens namn slutar på s, och följer gra
     plural = ""
 else:
     plural = "s"
+
+#RESTEN AV INTROT
 
 #Alla våra monster:
 
@@ -128,15 +170,28 @@ bossmonsteralternativ = [ # möjliga bossar
     monster('Den', 'den', 1, 1)
 ]
 
-attackbeskrivning = [f'slår {sp1.namn}', f'sparkar {sp1.namn}', f'klöser {sp1.namn} med tånaglarna', f'biter {sp1.namn}', f'slickar {sp1.namn}', 'sticker {sp1.namn} med sin {monster.vapen}', 'krossar {sp1.namn} med {monster.vapen}',]
+attackbeskrivning = [f'slår {sp1.namn}', f'sparkar {sp1.namn}', f'klöser {sp1.namn} med tånaglarna', f'biter {sp1.namn}', f'slickar {sp1.namn}', 'sticker {sp1.namn}', 'krossar {sp1.namn}',] #kul beskrivning för hur spelaren attackeras.
 
 while True: #Hela spelloopen
     sp1.ge_stats()
-    rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'bossrum', 'läkerum']
-    while len(rumstyp) > 3:
-        rumstyp.pop(randint(0, len(rumstyp)-1))
-        
-    print(f"{sp1.namn} ser tre dörrar {rumstyp}.")
+    rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'bossrum', 'läkerum'] #lista med möjliga rumstyper. rumsantalen öker/sänker oddsen att stöta på vissa rum
+    while len(rumstyp) > 3: #tar bort rum tills det bara är tre kvar
+        rumstyp.pop(randint(0, len(rumstyp)-1)) 
+    dorrbeskrivningar = [] #tom lista för att lagra dörrbeskrivningar, gör spelet svårare då det inte är uppenbart vilket rum som dyker upp.
+    for i in rumstyp:
+        if i == 'monsterrum':
+            dorrbeskrivningar.append('mörk dörr med blodfläckar...')
+        elif i == 'skattkammare':
+            dorrbeskrivningar.append('trädörr med en gyllene ram...')
+        elif i == 'skatterum':
+            dorrbeskrivningar.append('gyllene dörr med en träram...')
+        elif i == 'bossrum':
+            dorrbeskrivningar.append('asstor port med en dödskalle på...')
+        elif i == 'läkerum':
+            dorrbeskrivningar.append('dörr med ett välkomnande ljus bakom...')
+        else:
+            print('något har gått riktigt fel här... slut på det roliga :/') #errormeddelande som inte bör dyka upp.
+    print(f"du ser tre dörrar: \n en {dorrbeskrivningar[0]} \n en {dorrbeskrivningar[1]} \n och en {dorrbeskrivningar[2]}")
 
     while True: #meny innan strid
         val = input('''Vad vill du göra?
@@ -150,25 +205,29 @@ while True: #Hela spelloopen
                 print(f'{i+1}.{print_skatt(sp1.inventarie[i - 1])}')
         elif val == 'D':
             while True:
-                val = input(f'Vilken dörr vill du öppna? \n [1] {rumstyp[0]} \n [2] {rumstyp[1]} \n [3] {rumstyp[2]} \n [4] Avbryt \n ->')
+                val = input(f'Vilken dörr vill du öppna? \n [1] {dorrbeskrivningar[0]} \n [2] {dorrbeskrivningar[1]} \n [3] {dorrbeskrivningar[2]} \n [4] Avbryt \n ->')
                 if val in ['1', '2', '3', '4']:
                     break
                 else:
-                    print('Ogiltigt val: välj igen')
+                    print('Ogiltigt val: välj igen') #om spelaren inte väljer ett giltigt val.
                     continue
-            if val in ['1', '2', '3']:
-                print(f'{sp1.namn} kliver in i ett {rumstyp[int(val)-1]}')
+            if val in ['1', '2', '3']: #om spelaren väljer att öppna en dörr
+                print(f'{sp1.namn} kliver in i ett {rumstyp[int(val)-1]}') #rumstypen avsjöjas för spelaren
                 time.sleep(1)
                 break
 
-        elif val == 'F':
+        elif val == 'F': #printar spelarens färdigheter
             print(f'{sp1.namn + plural} färdigheter:\n  Nivå: {sp1.niva} | KP: {sp1.kp} / {sp1.kp + sp1.skada} | STY: {sp1.sty}')
 
         else:
             continue
         
+# RUMSTYPER OCH HÄNDELSER
+
+    # MONSTERRUM
+
     if rumstyp[int(val)-1] == 'monsterrum':
-        sp1.ge_stats()
+        sp1.ge_stats() #uppdaterar spelarens stats en funktion
         fiende = monsteralternativ[randint(0, len(monsteralternativ)-1)] #Väljer en fiende till just detta rum
         print(f"{fiende.genus} {fiende.monstertyp} dyker upp!")
         print(f"Den har styrkan {fiende.sty}")
@@ -176,7 +235,7 @@ while True: #Hela spelloopen
 
         time.sleep(0.5)
 
-        while True:
+        while True: #stridssekvensen
                 val = input(f'''Vad vill du göra?
                                 Kolla [R]yggsäcken
                                 Slå mot [M]onstret {fiende.monstertyp}
@@ -192,12 +251,12 @@ while True: #Hela spelloopen
                 else:
                     continue
 
-        if sp1.sty > fiende.sty: #kollar vem som vinner
+        if sp1.sty > fiende.sty: #kollar om spelaren vinner
             print(f"{sp1.namn} besegrade {fiende.monstertyp} och gick upp en nivå! \n\n")
             sp1.bas_niva += 1 #sp1 går upp en nivå
         elif sp1.sty == fiende.sty: 
-            print(f"Det var en svår strid, utan wiener. Du tar ingen skada men går inte upp en nivå. \n\n")
-        else:
+            print(f"Det var en svår strid, utan segrare. Du tar ingen skada men går inte upp en nivå. \n\n")
+        else: #om selaren varken vinner 
             print(f"{sp1.namn} blev besegrad av {fiende.monstertyp} och förlorade 1 kp. \n\n")
             sp1.skada += 1
 
@@ -206,8 +265,9 @@ while True: #Hela spelloopen
         print(f"{sp1.namn} har {sp1.kp - sp1.skada} kp kvar.")
         print(f"{sp1.namn} är nivå {sp1.niva}.")
     
-    
-    elif rumstyp[int(val)-1] == 'skattkammare': #SKATTKAMMARE
+    #SKATTKAMMARE, rum att få skatter i
+
+    elif rumstyp[int(val)-1] == 'skattkammare': 
         foremal_kvalitet = randint(1, 100)
         while True:
             if foremal_kvalitet >= 96:
@@ -256,8 +316,9 @@ while True: #Hela spelloopen
             else:
                 print('Skriv in [J]a eller [N]ej')
 
-    
-    elif rumstyp[int(val)-1] == 'skatterum': #BETALA SKATT RUM
+    # SKATTERUM, rum att betala skatt i
+
+    elif rumstyp[int(val)-1] == 'skatterum':
         print(f'{sp1.namn} kliver in i en mörk skattkammare')
         time.sleep(0.5)
         print(f'{sp1.namn} ser en dvärg i andra änden av rummet')
@@ -274,8 +335,9 @@ while True: #Hela spelloopen
         elif val == 'S':
             avskaffa_skatt(sp1)
 
-    
-    elif rumstyp[int(val)-1] == 'bossrum': #BOSS
+    #EN BOSS
+
+    elif rumstyp[int(val)-1] == 'bossrum':
         sp1.ge_stats()
         fiende = bossmonsteralternativ[randint(0, len(bossmonsteralternativ)-1)]
         print(f'I ett bossrum kommer turer att utkämpas tills spelaren eller bossen är döda, eller spelaren lyckas fly. Spelaren kommer bli slagen upp till bossens sty och spelaren slår upp till sin sty, mellan varje tur kan föremål användas.')
@@ -361,8 +423,9 @@ while True: #Hela spelloopen
                 print('Skriv in [J]a eller [N]ej')
 
     
-    
-    elif rumstyp[int(val)-1] == 'läkerum': #HELNING
+    # LÄKERUM, spelaren helas
+
+    elif rumstyp[int(val)-1] == 'läkerum': 
         sp1.skada = sp1.skada - randint(1,3)
         if sp1.skada <= 0:
             sp1.skada = 0
