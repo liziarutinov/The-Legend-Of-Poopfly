@@ -4,6 +4,7 @@ from skatter import skatt
 from skatter import print_skatt
 from skatter import k1, k2, k3, k4
 from ormbarst_name_gen import von_ormbarst_namn
+from collections import Counter
 
 print('''
                                 _____ _
@@ -74,23 +75,49 @@ class karaktar: #Strukturen för spelarkaraktären
             self.kp = self.bas_kp + self.kpmod * kpmult + (self.niva * 2)
         self.sty = self.bas_sty + self.stymod * stymult + (self.niva * 2)
         if self.niva >= 10: #En check som kollar om spelaren vunnit eller förlorat varje gång det är möjligt.
-            if self.kp -self.skada < 1:
+            if self.kp - self.skada < 1:
                 quit('Du vann och dog samtidigt... galet...')
             quit('Du vann spelet!!!!!!!!')
         elif self.kp - self.skada < 1:
             quit('Förlust: Du har tagit mer träffar än du har KP!')
+
         synergi_array = [] #Används för att kolla synergieffekter mellan föremål i inventarien
-        for i in range(len(self.inventarie)): #SYNERGIER FUNKAR INTE ÄNNU
-            if self.inventarie[i].synergi_id != 0:
+        for i in range(len(self.inventarie)):
+            if self.inventarie[i].synergi_id != 0: #Loop sparar synergi_id:et hos alla föremål i inventariet
                 synergi_array.append(self.inventarie[i].synergi_id)
-        synergi_array.sort()
-        print(synergi_array)
-        for i in range(1, len(synergi_array) - 1):
-            if synergi_array[i] == synergi_array[i - 1]:
-                if synergi_array[i] == 1:
-                    self.inventarie.remove(skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."', 1))
-                    self.inventarie.remove(skatt('Spraydeoderant', 1, 0, 0, '"Teknikelevernas mardröm"', 1))
-                    self.inventarie.append(skatt('improviserad ELDKASTARE', -2, 5, 0, '"BOCKEN BRINNER!!!"', 0)) 
+
+        a = dict(Counter(synergi_array))
+        if a.get(1) == 2: #Synergi 1: ELDKASTARE
+            for p in range(2):
+                for synergi_skatt in self.inventarie:
+                    if synergi_skatt.synergi_id == 1:
+                        self.inventarie.remove(synergi_skatt)
+            self.inventarie.append(skatt('Improviserad ELDKASTARE', -2, 5, 0, '"BOCKEN BRINNER!!!"', 0))
+            self.inventarie[-1].kvalitet = 'SYNERGI'
+        
+        if a.get(2) == 2: #Synergi 2: Släpp lös det oönskade
+            for p in range(2): 
+                for synergi_skatt in self.inventarie:
+                    if synergi_skatt.synergi_id == 2:
+                        self.inventarie.remove(synergi_skatt)
+            self.inventarie.append(skatt('Det oönskade...', -100, 30, 4, '"...borde alldrig ha öppnat den"', 0))
+            self.inventarie[-1].kvalitet = 'SYNERGI'
+
+        if a.get(3) == 3: #Synergi 3: Dev console
+            for p in range(3):
+                for synergi_skatt in self.inventarie:
+                    if synergi_skatt.synergi_id == 3:
+                        self.inventarie.remove(synergi_skatt)
+            self.inventarie.append(skatt('Developer Console', 0, 0, 2, '"/level add 2"', 0))
+            self.inventarie[-1].kvalitet = 'SYNERGI'
+
+        if a.get(4) == 2: #Synergi 4: 
+            for p in range(2):
+                for synergi_skatt in self.inventarie:
+                    if synergi_skatt.synergi_id == 4:
+                        self.inventarie.remove(synergi_skatt)
+            self.inventarie.append(skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."'), 0)
+            self.inventarie[-1].kvalitet = '0'
 
 
 
@@ -120,7 +147,6 @@ sp1 = karaktar(f"{fnamn[randint(0, len(fnamn)-1)]}{enamn[randint(0, len(enamn)-1
 if sp1.namn[0] == 'g':
     sp1.namn = von_ormbarst_namn() #Speciell namn-generator för namn som börjar med g, för att få mer passande namn för Von Ormbarst
 
-sp1.inventarie += [skatt('Spray Deoderant', 1, 0, 0, '"Teknikelevernas mardröm"', 1), skatt('Tändare', 0, 1, 0, '"Hmmm. Jag undrar om dem kan brinna..."', 1)]
 foremal_kvalitet = randint(1, 100) #Bestämmer föremåls kvalitet för evighetsföremålet
 if foremal_kvalitet >= 96:
     foremal_kvalitet = k4
@@ -175,9 +201,11 @@ attackbeskrivning = [f'slår {sp1.namn}', f'sparkar {sp1.namn}', f'klöser {sp1.
 while True: #Hela spelloopen
     sp1.ge_stats()
     rumstyp = ['monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'monsterrum', 'skattkammare', 'skatterum', 'bossrum', 'bossrum', 'läkerum'] #lista med möjliga rumstyper. rumsantalen öker/sänker oddsen att stöta på vissa rum
+    for i in range(len(sp1.inventarie)): #lägger till fällor baserat på hur många föremål spelaren har
+        rumstyp.append('fälla')
     while len(rumstyp) > 3: #tar bort rum tills det bara är tre kvar
         rumstyp.pop(randint(0, len(rumstyp)-1)) 
-    dorrbeskrivningar = [] #tom lista för att lagra dörrbeskrivningar, gör spelet svårare då det inte är uppenbart vilket rum som dyker upp.
+    dorrbeskrivningar = [] #tom lista för dörrbeskrivningar
     for i in rumstyp:
         if i == 'monsterrum':
             dorrbeskrivningar.append('mörk dörr med blodfläckar...')
@@ -189,6 +217,12 @@ while True: #Hela spelloopen
             dorrbeskrivningar.append('asstor port med en dödskalle på...')
         elif i == 'läkerum':
             dorrbeskrivningar.append('dörr med ett välkomnande ljus bakom...')
+        elif i == 'fälla':
+            if 'Teleskop' in [sp1.inventarie]: # en skatt som låter spelaren se fällor
+                dorrbeskrivningar.append('Du ser en gyllene dörr, men du ditt teleskop låter dig se en fälla bakom...')
+            else:
+                falldorr = ['mörk dörr med blodfläckar...', 'trädörr med en gyllene ram...', 'gyllene dörr med en träram...', 'asstor port med en dödskalle på...', 'dörr med ett välkomnande ljus bakom...'] #standardbeskrivningar för att fylla ut listan
+                dorrbeskrivningar.append(falldorr[randint(0, len(falldorr)-1)]) #om spelaren inte har teleskopet får de en slumpmässig beskrivning
         else:
             print('något har gått riktigt fel här... slut på det roliga :/') #errormeddelande som inte bör dyka upp.
     print(f"du ser tre dörrar: \n en {dorrbeskrivningar[0]} \n en {dorrbeskrivningar[1]} \n och en {dorrbeskrivningar[2]}")
@@ -298,7 +332,7 @@ while True: #Hela spelloopen
                 tillvunnet_foremal = k1[randint(0, len(k1) - 1)]
                 k1.remove(tillvunnet_foremal)
             else:
-                tillvunnet_foremal = skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."')
+                tillvunnet_foremal = skatt('Poopfly', -100, -100, 10, '"Wow, den suger verkligen mer än vad jag trodde..."', 0)
             break
         mod = 'mod'
         if skatt.mod_ar_mult == True:
@@ -422,11 +456,20 @@ while True: #Hela spelloopen
             else:
                 print('Skriv in [J]a eller [N]ej')
 
-    
     # LÄKERUM, spelaren helas
 
     elif rumstyp[int(val)-1] == 'läkerum': 
-        sp1.skada = sp1.skada - randint(1,3)
+        sp1.skada = sp1.skada - randint(1, sp1.kp//2) #spelaren läker mellan 1 och halva sin kp
         if sp1.skada <= 0:
             sp1.skada = 0
         print('Du är nu hel!')
+    
+    # FÄLLA, spelaren tar skada
+    
+    elif rumstyp[int(val)-1] == 'fälla':
+        fallskada = randint(0, sp1.kp//2) # Spelaren kan ta upp till halva sin kp i skada
+        if fallskada == 0:
+            print(f'OJ! {sp1.namn} klev in i en FÄLLA men undvek den, ingen skada tagen!')
+        else:
+            print(f'AJ! {sp1.namn} klev in i en FÄLLA och tog {fallskada} skada!')
+            sp1.skada += fallskada

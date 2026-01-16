@@ -44,10 +44,10 @@ for i in k2:
 k3 = [
 skatt('Sten', -1, 5, 0, '"Hur kan en sten gråta?!"', 0),
 skatt('Schweizisk armékniv', 0, 6, 0, "Undrar varför pappor älskar såna..", 0),
-skatt('Ring', 2, 2, 2, '"Det är ju jag!" - Alwin Ring \n "En skapades för att styra alla"', 5),
-skatt('Liten Anton', 1, 5, 2, '"Minibassist i Ormbarst"', 3),
-skatt('Liten Ludvig',1, 5, 2, '"Minigitarrist i Ormbarst"', 3),
-skatt('Liten Lizi', 1, 5, 2, '"Mini day one till Ormbarst"', 3),
+skatt('Ring', 2, 2, 1, '"Det är ju jag!" - Alwin Ring \n "En skapades för att styra alla"', 5),
+skatt('Liten Anton', 1, 5, 1, '"Minibassist i Ormbarst"', 3),
+skatt('Liten Ludvig',1, 5, 1, '"Minigitarrist i Ormbarst"', 3),
+skatt('Liten Lizi', 1, 5, 1, '"Mini day one till Ormbarst"', 3),
 skatt('Minikit', 0, 4, 2, '"Kai"', 0)
 ]
 for i in k3:
