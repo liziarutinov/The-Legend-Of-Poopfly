@@ -313,7 +313,7 @@ monsteralternativ = [ #möjliga fiender
     monster('Ett vilt', 'Troll', 7 + randint(3, sp1.sty+8), 1),
     monster('En vild', 'Rikard', 2, 1),
     monster('En galen', 'Blottare', 6 + randint(1, sp1.sty + 5), 1),
-    monster('En kittel', 'fladdermöss', 3 + randint(2, sp1.sty-2), 1)
+    monster('En kittel', 'fladdermöss', 3 + randint(2, sp1.sty-1), 1)
 ]
 
 bossmonsteralternativ = [ # möjliga bossar
