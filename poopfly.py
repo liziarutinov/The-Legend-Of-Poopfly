@@ -307,13 +307,13 @@ class monster: #strukturen alla monster följer
         monster.kp = kp
 
 monsteralternativ = [ #möjliga fiender
-    monster('En vild', 'Guldfisk', 1 + randint(sp1.niva, sp1.niva + 1), 1),
-    monster('En vild', 'Goblin', 3 + randint(sp1.niva, sp1.niva + 8), 1),
-    monster('En vild', 'Häxa', 5 + randint(sp1.niva, sp1.niva + 8), 1),
-    monster('Ett vilt', 'Troll', 7 + randint(sp1.niva, sp1.niva + 14), 1),
-    monster('En vild', 'Rikard', -5 + randint(sp1.niva, sp1.niva + 2), 1),
-    monster('En galen', 'Blottare', 6 + randint(sp1.niva, sp1.niva + 8), 1),
-    monster('En kittel', 'fladdermöss', 3 + randint(sp1.niva, sp1.niva + 14), 1)
+    monster('En vild', 'Guldfisk', randint(1, 3), 1),
+    monster('En vild', 'Goblin', 3 + randint(sp1.sty-3, sp1.sty +3), 1),
+    monster('En vild', 'Häxa', 5 + randint(sp1.sty-4, sp1.sty +2), 1),
+    monster('Ett vilt', 'Troll', 7 + randint(3, sp1.sty+8), 1),
+    monster('En vild', 'Rikard', 2, 1),
+    monster('En galen', 'Blottare', 6 + randint(1, sp1.sty + 5), 1),
+    monster('En kittel', 'fladdermöss', 3 + randint(2, sp1.sty-2), 1)
 ]
 
 bossmonsteralternativ = [ # möjliga bossar
@@ -336,6 +336,7 @@ while True: #Hela spelloopen
         rumstyp.append('fällrum')
     while len(rumstyp) > 3: #tar bort rum tills det bara är tre kvar
         rumstyp.pop(randint(0, len(rumstyp)-1)) 
+    shuffle(rumstyp) #slumpar ordningen på rummen
     dorrbeskrivningar = [] #tom lista för dörrbeskrivningar
     for i in rumstyp:
         if i == 'monsterrum':
@@ -356,7 +357,6 @@ while True: #Hela spelloopen
                 dorrbeskrivningar.append(falldorr[randint(0, len(falldorr)-1)]) #om spelaren inte har teleskopet får de en slumpmässig beskrivning
         else:
             slow('något har gått riktigt fel här... slut på det roliga :/') #errormeddelande som inte bör dyka upp.
-    shuffle(dorrbeskrivningar)
     slow(f'{sp1.namn} ser tre dörrar: \n en {dorrbeskrivningar[0]} \n en {dorrbeskrivningar[1]} \n och en {dorrbeskrivningar[2]}\n')
 
     while True: #meny innan strid
@@ -421,11 +421,11 @@ while True: #Hela spelloopen
         if sp1.sty > fiende.sty: #kollar om spelaren vinner
             slow(f'{sp1.namn} besegrade {fiende.monstertyp} och gick upp en nivå! \n')
             sp1.bas_niva += 1 #sp1 går upp en nivå
-        elif sp1.sty == fiende.sty: 
+        elif sp1.sty == fiende.sty: #om selaren varken vinner eller förlorar
             slow(f'Det var en svår strid, utan segrare. {sp1.namn} tar ingen skada men går inte upp en nivå. \n')
-        else: #om selaren varken vinner 
+        else: #om spelaren förlorar
             slow(f'{sp1.namn} blev besegrad av {fiende.monstertyp} och förlorade 1 kp. \n')
-            sp1.skada += 1
+            sp1.skada += randint(1, monster.sty) #sp1 tar skada
 
         time.sleep(1)
 
@@ -482,7 +482,7 @@ while True: #Hela spelloopen
             elif val == 'N':
                 break
             else:
-                slow('Skriv in [J]a eller [N]ej')
+                slow('Skriv in [J]a eller [N]ej\n')
 
     # SKATTERUM, rum att betala skatt i
 
