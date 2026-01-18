@@ -80,8 +80,8 @@ class karaktar: #Strukturen för spelarkaraktären
         if self.bas_kp + self.kpmod * kpmult < 1:
                 self.kp = 1
         else:
-            self.kp = self.bas_kp + self.kpmod * kpmult + (self.niva * 2)
-        self.sty = self.bas_sty + self.stymod * stymult + (self.niva * 2)
+            self.kp = (self.bas_kp + self.kpmod) * kpmult + (self.niva * 2)
+        self.sty = (self.bas_sty + self.stymod) * stymult + (self.niva * 2)
         
     
         if self.niva >= 10: #En check som kollar om spelaren vunnit eller förlorat varje gång det är möjligt.
