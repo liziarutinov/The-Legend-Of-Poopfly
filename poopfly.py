@@ -43,7 +43,7 @@ print('''
 
 input('Träd in i fängelshålan och ta med dig Poopfly:n på [RETUR]resan')
 
-fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'Filip', 'Holger'] 
+fnamn = ['Isak', 'Pelle', 'Ludvig', 'Anton', 'Lizi', 'Edmund', 'Bertholowmew', 'gon', 'gon', 'gon', 'Filip', 'Holger', 'Oskar'] 
 enamn = [', den fördärvade', ' Bajs', ' McMillen', ' Döden', ' Nilsson', ' Rosencrantz', ' O´ Moriah', ' Kall', ' Von Ormbarst', ', den trosfanatiska', ', den skurna', ', den oupplysta', ', den enigmatiska', ', den godtyckliga', '']
 
 class karaktar: #Strukturen för spelarkaraktären
@@ -136,6 +136,7 @@ class karaktar: #Strukturen för spelarkaraktären
         #Förlust
 
         elif self.kp - self.skada < 1: #Om man dör printas detta
+            sluttid = time.time() #stoppar timern
             slow(f'Du har FÖRLORAT SPELET! \n Det tog dig {int(sluttid - starttid)}')
             while True: #Liten meny där man kan kolla sina stats och föremål innan man stänger ner spelet
                 val = input('Tryck [F] för att kolla dina stats, [R] för att kolla rygsäcken eller Tryck [D] för att avsluta spelet')
