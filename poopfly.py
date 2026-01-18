@@ -506,7 +506,7 @@ while True: #Hela spelloopen
                 slow(f'{sp1.namn} plockar upp {tillvunnet_foremal.namn}')
                 break
             elif val == 'N':
-                slow(f'{sp1.namn} lämmnar {tillvunnet_foremal} bakom sig.')
+                slow(f'{sp1.namn} lämmnar {tillvunnet_foremal.namn} bakom sig.')
                 break
             else:
                 slow('Skriv in [J]a eller [N]ej\n')
