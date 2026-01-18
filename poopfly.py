@@ -68,13 +68,13 @@ class karaktar: #Strukturen för spelarkaraktären
         stymult = 1
         kpmult = 1
         for i in range(len(self.inventarie)): #applicerar föremålens modifikationer på karaktären, förändringarna kommer från filen skatter.py
-            if self.inventarie[i - 1].mod_ar_mult == True:
-                stymult += self.inventarie[i - 1].kpmod
-                kpmult += self.inventarie[i - 1].stymod
+            if self.inventarie[i].mod_ar_mult == True:
+                stymult += self.inventarie[i].kpmod
+                kpmult += self.inventarie[i].stymod
             else:
-                self.kpmod += self.inventarie[i - 1].kpmod
-                self.stymod += self.inventarie[i -1].stymod
-                self.nivamod += self.inventarie[i - 1].nivamod
+                self.kpmod += self.inventarie[i].kpmod
+                self.stymod += self.inventarie[i].stymod
+                self.nivamod += self.inventarie[i].nivamod
         
         self.niva = self.bas_niva + self.nivamod #spelarens totala nivå
         if self.bas_kp + self.kpmod * kpmult < 1:
@@ -103,7 +103,7 @@ class karaktar: #Strukturen för spelarkaraktären
                 time.sleep(2)
                 slow(f'Grattis! Du har vunnit spelet!... men till vilket pris? \n Det tog dig {int(sluttid - starttid)} sekunder')
                 while True: #Liten meny där man kan kolla sina stats och föremål innan man stänger ner spelet
-                    val = input('Tryck [F] för att kolla dina stats, [R] för att kolla rygsäcken eller Tryck [D] för att avsluta spelet').upper()
+                    val = input('Tryck [F] för att kolla dina stats innan du dog, [R] för att kolla rygsäcken eller Tryck [D] för att avsluta spelet').upper()
                     if val == 'R': #printar inventroty
                         if len(sp1.inventarie) < 1:
                             print('Du har inga föremål')
@@ -144,7 +144,7 @@ class karaktar: #Strukturen för spelarkaraktären
                         print(f'{i+1}.{print_skatt(sp1.inventarie[i - 1])}\n')
 
                 elif val == 'D': #avslutar spelet
-                    quit('Förlust')
+                    quit('Vinnst!!!!!!')
 
                 elif val == 'F': #printar spelarens färdigheter
                     print(f'{sp1.namn + plural} färdigheter:\n  Nivå: {sp1.niva} | KP: {sp1.kp} / {sp1.kp + sp1.skada} | STY: {sp1.sty}\n')
@@ -155,7 +155,7 @@ class karaktar: #Strukturen för spelarkaraktären
             sluttid = time.time() #stoppar timern
             slow(f'Du har FÖRLORAT SPELET! \n Det tog dig {int(sluttid - starttid)} sekunder')
             while True: #Liten meny där man kan kolla sina stats och föremål innan man stänger ner spelet
-                val = input('Tryck [F] för att kolla dina stats, [R] för att kolla rygsäcken eller Tryck [D] för att avsluta spelet').upper()
+                val = input('Tryck [F] för att kolla dina stats presis innan du dog, [R] för att kolla rygsäcken eller Tryck [D] för att avsluta spelet').upper()
                 if val == 'R': #printar inventroty
                     if len(sp1.inventarie) < 1:
                         print('Du har inga föremål')
@@ -369,7 +369,7 @@ while True: #Hela spelloopen
         elif i == 'läkerum':
             dorrbeskrivningar.append('dörr med ett välkomnande ljus bakom...')
         elif i == 'fällrum':
-            if 'Teleskop' in [sp1.inventarie]: # en skatt som låter spelaren se fällor
+            if skatt('Teleskop', 0, 0, 0, '"Ökad sikt"', 0) in [sp1.inventarie]: # en skatt som låter spelaren se fällor
                 dorrbeskrivningar.append(f'{sp1.namn} ser en gyllene dörr, men {sp1.namn + plural} teleskop låter dig se en fälla bakom...')
             else:
                 falldorr = ['mörk dörr med blodfläckar...', 'trädörr med en gyllene ram...', 'gyllene dörr med en träram...', 'asstor port med en dödskalle på...', 'dörr med ett välkomnande ljus bakom...'] #standardbeskrivningar för att fylla ut listan
